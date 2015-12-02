@@ -3,18 +3,26 @@
 
 const program = require('commander')
 const rl = require("readline-sync")
+const fs = require('fs-extra')
 
 program
   .version('1.0.0')
   .command('new <name>')
-  .option('-p, --package','Java package name.')
   .alias('n')
-  .description('Create new eee projects.')
-  .action((cmd,options)=>{
-    console.log(`command ${cmd} executed. options=${options}`)
-    let name = rl.question('What your name? ')
-    console.log(name)
-    let age = rl.question('What your age? ')
+  .description('Create new Reels project.')
+  .action((name)=>{
+    if(fs.existsSync(`./${name}`)){
+      console.log(`プロジェクト${name}は既に存在します`)
+      return
+    }
+    console.log(`${name}を作成しています`)
+    fs.copySync(`${__dirname}/template/project`, `./${name}`)
+    console.log(`${name}を作成しました Use: cd ${name}`)
+
+    //TODO 変更できる設定は対話式で入力させ、プロジェクト設定ファイルとして保存したい。
+    //let name = rl.question('What your name? ')
+    //console.log(name)
+    //let age = rl.question('What your age? ')
   })
 
 program
