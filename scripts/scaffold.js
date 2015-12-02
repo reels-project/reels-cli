@@ -21,6 +21,7 @@ class Scaffold{
     this.javaDir = `${this.javaSrcDir}/com/github/yyyy`
     this.javaViewDir = `${this.javaDir}/view`
     this.javaModelDir = `${this.javaDir}/model`
+    this.javaResourceDir = `${this.javaDir}/resource`
     this.webApps = 'src/main/webapp'
     this.viewDir = `${this.webApps}/views`
 
@@ -33,6 +34,29 @@ class Scaffold{
       {java:'CreateView.java',xhtml:'create.xhtml'},
       {java:'EditView.java',xhtml:'edit.xhtml'},
     ]
+  }
+
+  generateRest(targetName,columns){
+    targetName = this.toVarName(targetName)
+    columns = columns || []
+    console.log(`columns = ${columns}`)
+    const cols = columns.map((c)=>this.toColumnObj(c))
+    if(!cols.some((e)=>e.name === 'id')){
+      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
+    }
+    console.log(`cols = ${cols}`)
+
+    const args = {
+      packageName:this.packageName,
+      targetName:targetName,
+      targetName2:this.toJavaName(targetName),
+      columns:cols
+    }
+    fs.mkdirsSync(this.javaResourceDir)
+    fs.mkdirsSync(this.javaModelDir)
+
+    this.renderTemplate(`${this.javaTemplate}/Resource.java`,`${this.javaResourceDir}/${args.targetName2}Resource.java`,args)
+    this.renderTemplate(`${this.javaTemplate}/Model.java`,`${this.javaModelDir}/${args.targetName2}Model.java`,args)
   }
 
   generate(targetName,columns){
