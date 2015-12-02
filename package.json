@@ -1,0 +1,32 @@
+{
+  "name": "reels-cli",
+  "version": "1.0.0",
+  "description": "This is Reels command line tools.",
+  "main": "reels.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reels-project/reels-cli.git"
+  },
+  "keywords": [
+    "java",
+    "javaEE"
+  ],
+  "author": "master-of-sugar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reels-project/reels-cli/issues"
+  },
+  "homepage": "https://github.com/reels-project/reels-cli#readme",
+  "bin": {
+    "reels": "reels.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "ejs": "^2.3.4",
+    "fs-extra": "^0.26.2",
+    "readline-sync": "^1.2.21"
+  }
+}

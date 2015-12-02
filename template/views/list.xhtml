@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	template="../layout/_layout.xhtml">
+	<ui:param name="pageTitle" value="<%- targetName %>" />
+
+	<ui:define name="content">
+		<h:link outcome="create.xhtml" value="Create new one"/>
+		<table>
+
+		<ui:repeat var="model" value="#{<%- targetName %>ListView.<%- targetName %>Models}">
+
+			<tr>
+				<% columns.forEach(function(u){ %>
+				<td>#{model.<%-u.name%>}</td>
+				<% }) %>
+				<td>
+					<h:link outcome="/views/<%- targetName %>/edit.xhtml" value="Edit" >
+						<f:param name="id" value="#{model.id}"/>
+					</h:link>
+				</td>
+				<td>
+					<h:form>
+						<h:commandLink value="Delete" action="#{<%- targetName %>ListView.delete(model.id)}" />
+					</h:form>
+				</td>
+			</tr>
+		</ui:repeat>
+		</table>
+	</ui:define>
+</ui:composition>

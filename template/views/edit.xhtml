@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	template="../layout/_layout.xhtml">
+	<ui:param name="pageTitle" value="<%-targetName%>" />
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="id" value="#{<%-targetName%>EditView.id}"></f:viewParam>
+			<f:viewAction action="#{<%-targetName%>EditView.init()}" />
+		</f:metadata>
+		<h:link outcome="list.xhtml" value="Back"/>
+		<h:form>
+			<% columns.filter(function(e){return e.name != 'id'}).forEach(function(c){ %>
+			<label for="model_<%-c.name%>" ><%-c.name%></label>
+			<h:inputText id="model_<%-c.name%>" value="#{<%-targetName%>EditView.model.<%-c.name%>}" />
+			<% }) %>
+
+			<h:commandButton value="Modify" action="#{<%-targetName%>EditView.edit()}" >
+			</h:commandButton>
+		</h:form>
+	</ui:define>
+</ui:composition>
