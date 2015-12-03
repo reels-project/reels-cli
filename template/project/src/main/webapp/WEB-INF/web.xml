@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+  <display-name>Archetype Created Web Application</display-name>
+  <session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<servlet>
+		<servlet-name>JSFServlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<multipart-config>
+			<max-file-size>10485760</max-file-size>
+			<max-request-size>20971520</max-request-size>
+			<file-size-threshold>5242880</file-size-threshold>
+		</multipart-config>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JSFServlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<description>ビューの状態を保存する場所</description>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>client</param-value>
+	</context-param>
+	<!-- <context-param> <description>ビューの状態をサーバーで保存する場合の最大数</description> <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name> 
+		<param-value>20</param-value> </context-param> -->
+	<context-param>
+		<param-name>facelets.BUILD_BEFORE_RESTORE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<!-- カスタムタグ設定 -->
+	<!-- 
+	<context-param>
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/jal.taglib.xml</param-value>
+	</context-param>
+	 -->
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<welcome-file-list>
+		<welcome-file>/index.html</welcome-file>
+	</welcome-file-list>
+	<error-page>
+	<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/index.html</location>
+	</error-page>
+</web-app>
