@@ -5,8 +5,6 @@ const program = require('commander')
 const rl = require("readline-sync")
 const scaffold = require('./scripts/scaffold')
 
-console.log('よばれた')
-
 program
   .command('model <name> [columns...]')
   .description('generate model')
@@ -17,13 +15,19 @@ program
 
 program
   .command('scaffold <name> [columns...]')
+  .option('-t,--type <t>','Type of Application', /^(jsf|rest)$/i, 'jsf')
   .description('generate scaffold')
-  .action((name,columns)=>{
+  .action((name,columns,options)=>{
     console.log(name)
     console.log(columns)
+    console.log(options.type)
 
     let scaff = scaffold.new()
-    scaff.generate(name,columns)
+    if(options.type && options.type === 'rest'){
+      scaff.generateRest(name,columns)
+    }else{
+      scaff.generate(name,columns)
+    }
   })
 
 
