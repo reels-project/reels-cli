@@ -13,22 +13,21 @@ JavaEE + Rails = 「Reels」
 
 
 ##Commands
-###new [n]
+###new
 JavaEEプロジェクトを作る(Maven)。IDEは固定しない。
 
-###generate [g]
+###generate
  - scaffold
    - -t --type (jsf|rest) default jsf
 
-###server [s]
+###server(まだできない)
 TODO 組み込みサーバーがいいなあ(´・ω・`)
 
  - port [p]
 
 ##やりたいことリスト
- - REST用Scaffolding
- - EEプロジェクト作成=>newコマンド
  - テスト用コードを出す
  - 項目をファイルから読み込み
  - テストデータ
+ - Modelだけ、Resourceだけ、Viewだけのgenerate追加
 
