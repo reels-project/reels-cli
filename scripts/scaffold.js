@@ -33,6 +33,7 @@ class Scaffold{
       {java:'ListView.java',xhtml:'list.xhtml'},
       {java:'CreateView.java',xhtml:'create.xhtml'},
       {java:'EditView.java',xhtml:'edit.xhtml'},
+      {java:'ShowView.java',xhtml:'show.xhtml'}
     ]
   }
 

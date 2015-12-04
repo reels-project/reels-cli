@@ -18,6 +18,11 @@
 				<td>#{model.<%-u.name%>}</td>
 				<% }) %>
 				<td>
+					<h:link outcome="/views/<%- targetName %>/show.xhtml" value="Show" >
+						<f:param name="id" value="#{model.id}"/>
+					</h:link>
+				</td>
+				<td>
 					<h:link outcome="/views/<%- targetName %>/edit.xhtml" value="Edit" >
 						<f:param name="id" value="#{model.id}"/>
 					</h:link>
