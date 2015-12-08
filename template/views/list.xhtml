@@ -11,7 +11,7 @@
 		<h:form>
 			<% columns.forEach(function(c){ %>
 			<label for="model_<%-c.name%>" ><%-c.name%></label>
-			<h:inputText id="model_<%-c.name%>" value="#{<%-targetName%>ListView.condition.<%-c.name%>}" />
+			<h:<%-toInputTag(c)%> id="model_<%-c.name%>" value="#{<%-targetName%>ListView.condition.<%-c.name%>}" />
 			<% }) %>
 
 			<h:commandButton value="Search" actionListener="#{<%-targetName%>ListView.search()}" >

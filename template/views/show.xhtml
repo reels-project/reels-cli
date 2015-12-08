@@ -16,7 +16,7 @@
 		<h:form>
 			<% columns.filter(function(e){return e.name != 'id'}).forEach(function(c){ %>
 			<label for="model_<%-c.name%>" ><%-c.name%></label>
-			<h:outputText id="model_<%-c.name%>" value="#{<%-targetName%>ShowView.model.<%-c.name%>}" />
+			<h:<%-toOutputTag(c)%> id="model_<%-c.name%>" value="#{<%-targetName%>ShowView.model.<%-c.name%>}" disabled="true"/>
 			<% }) %>
 		</h:form>
 	</ui:define>

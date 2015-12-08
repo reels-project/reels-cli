@@ -74,7 +74,9 @@ class Scaffold{
       packageName:this.packageName,
       targetName:targetName,
       targetName2:this.toJavaName(targetName),
-      columns:cols
+      columns:cols,
+      toInputTag:this.toInputTag,
+      toOutputTag:this.toOutputTag
     }
     fs.mkdirsSync(this.javaViewDir)
     fs.mkdirsSync(this.javaModelDir)
@@ -121,6 +123,24 @@ class Scaffold{
       name : name,
       javaName : this.toJavaName(name),
       javaType : type || 'String'
+    }
+  }
+
+  toInputTag(c) {
+    switch (c.javaType) {
+     case 'Boolean':
+       return 'selectBooleanCheckbox'; break;
+     default:
+       return 'inputText'
+    }
+  }
+
+  toOutputTag(c) {
+    switch (c.javaType) {
+     case 'Boolean':
+       return 'selectBooleanCheckbox'; break;
+     default:
+       return 'outputText'
     }
   }
 }
