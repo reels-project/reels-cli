@@ -129,7 +129,13 @@ class Scaffold{
   toInputTag(c) {
     switch (c.javaType) {
      case 'Boolean':
-       return 'selectBooleanCheckbox'; break;
+       return 'selectBooleanCheckbox'
+     case 'Double':
+     case 'Long':
+     case 'Intger':
+       return 'inputText p:type="number"'
+     case 'LocalDate':
+       return 'inputText p:type="datetime-local"'
      default:
        return 'inputText'
     }
