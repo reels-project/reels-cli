@@ -20,29 +20,40 @@
 
 		<h:link outcome="create.xhtml" value="Create new one"/>
 		<table>
+			<thead>
+				<tr>
+				<% columns.forEach(function(u){ %>
+					<th><%-u.name%></th>
+				<% }) %>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
 
 		<ui:repeat var="model" value="#{<%- targetName %>ListView.<%- targetName %>Models}">
-
-			<tr>
-				<% columns.forEach(function(u){ %>
-				<td>#{model.<%-u.name%>}</td>
-				<% }) %>
-				<td>
-					<h:link outcome="/views/<%- targetName %>/show.xhtml" value="Show" >
-						<f:param name="id" value="#{model.id}"/>
-					</h:link>
-				</td>
-				<td>
-					<h:link outcome="/views/<%- targetName %>/edit.xhtml" value="Edit" >
-						<f:param name="id" value="#{model.id}"/>
-					</h:link>
-				</td>
-				<td>
-					<h:form>
-						<h:commandLink value="Delete" action="#{<%- targetName %>ListView.delete(model.id)}" />
-					</h:form>
-				</td>
-			</tr>
+			<tbody>
+				<tr>
+					<% columns.forEach(function(u){ %>
+					<td>#{model.<%-u.name%>}</td>
+					<% }) %>
+					<td>
+						<h:link outcome="/views/<%- targetName %>/show.xhtml" value="Show" >
+							<f:param name="id" value="#{model.id}"/>
+						</h:link>
+					</td>
+					<td>
+						<h:link outcome="/views/<%- targetName %>/edit.xhtml" value="Edit" >
+							<f:param name="id" value="#{model.id}"/>
+						</h:link>
+					</td>
+					<td>
+						<h:form>
+							<h:commandLink value="Delete" action="#{<%- targetName %>ListView.delete(model.id)}" />
+						</h:form>
+					</td>
+				</tr>
+			</tbody>
 		</ui:repeat>
 		</table>
 	</ui:define>
