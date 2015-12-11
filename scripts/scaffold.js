@@ -3,6 +3,20 @@
 const fs = require('fs-extra')
 const ejs = require('ejs')
 
+// Viewからのfunction呼び出しでthisが参照できなさそうだったのでconst定義
+const inputTypes = {
+  'number': ['Double','Long','Integer'],
+  'time': ['LocalTime'],
+  'datetime-local': ['LocalDateTime'],
+  'date': ['LocalDate','Date']
+}
+const importTypes = {
+   'LocalDate': 'java.time.LocalDate',
+   'LocalDateTime': 'java.time.LocalDateTime',
+   'LocalTime': 'java.time.LocalTime',
+   'Date': 'java.util.Date'
+}
+
 class Scaffold{
 
   constructor(){
@@ -51,7 +65,10 @@ class Scaffold{
       packageName:this.packageName,
       targetName:targetName,
       targetName2:this.toJavaName(targetName),
-      columns:cols
+      columns:cols,
+      toInputTag:this.toInputTag,
+      toOutputTag:this.toOutputTag,
+      importTypes: importTypes
     }
     fs.mkdirsSync(this.javaResourceDir)
     fs.mkdirsSync(this.javaModelDir)
@@ -76,7 +93,8 @@ class Scaffold{
       targetName2:this.toJavaName(targetName),
       columns:cols,
       toInputTag:this.toInputTag,
-      toOutputTag:this.toOutputTag
+      toOutputTag:this.toOutputTag,
+      importTypes: importTypes
     }
     fs.mkdirsSync(this.javaViewDir)
     fs.mkdirsSync(this.javaModelDir)
@@ -130,14 +148,15 @@ class Scaffold{
     switch (c.javaType) {
      case 'Boolean':
        return 'selectBooleanCheckbox'
-     case 'Double':
-     case 'Long':
-     case 'Intger':
-       return 'inputText p:type="number"'
-     case 'LocalDate':
-       return 'inputText p:type="datetime-local"'
      default:
-       return 'inputText'
+       var type = 'text'
+       for(var t in inputTypes){
+          if(inputTypes[t].indexOf(c.javaType) > -1) {
+            type = t;
+            break;
+          }
+       }
+       return `inputText p:type="${type}"`
     }
   }
 
@@ -148,6 +167,10 @@ class Scaffold{
      default:
        return 'outputText'
     }
+  }
+
+  toIncludeTag(c) {
+
   }
 }
 
