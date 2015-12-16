@@ -3,20 +3,6 @@
 const fs = require('fs-extra')
 const ejs = require('ejs')
 
-// Viewからのfunction呼び出しでthisが参照できなさそうだったのでconst定義
-const inputTypes = {
-  'number': ['Double','Long','Integer'],
-  'time': ['LocalTime'],
-  'datetime-local': ['LocalDateTime'],
-  'date': ['LocalDate','Date']
-}
-const importTypes = {
-   'LocalDate': 'java.time.LocalDate',
-   'LocalDateTime': 'java.time.LocalDateTime',
-   'LocalTime': 'java.time.LocalTime',
-   'Date': 'java.util.Date'
-}
-
 class Scaffold{
 
   constructor(){
@@ -49,6 +35,29 @@ class Scaffold{
       {java:'EditView.java',xhtml:'edit.xhtml'},
       {java:'ShowView.java',xhtml:'show.xhtml'}
     ]
+    this.inputTypes = {
+      'number': ['Double','Long','Integer'],
+      'time': ['LocalTime'],
+      'datetime-local': ['LocalDateTime'],
+      'date': ['LocalDate','Date']
+    }
+    this.importTypes = {
+      'LocalDate': 'java.time.LocalDate',
+      'LocalDateTime': 'java.time.LocalDateTime',
+      'LocalTime': 'java.time.LocalTime',
+      'Date': 'java.util.Date'
+    }
+    this.inputConveters = {
+      'String': 'convertOptionalString',
+      'Boolean': 'convertBoolean',
+      'Double': 'convertDouble',
+      'Long': 'convertLong',
+      'Integer': 'convertInteger',
+      'LocalTime': 'convertTime',
+      'LocalDateTime': 'convertDateTime',
+      'LocalDate': 'convertDate',
+      'Date': 'convertDate',
+    }
   }
 
   generateRest(targetName,columns){
@@ -66,9 +75,13 @@ class Scaffold{
       targetName:targetName,
       targetName2:this.toJavaName(targetName),
       columns:cols,
+      importTypes:this.importTypes,
+      inputTypes:this.inputTypes,
+      inputConveters:this.inputConveters,
       toInputTag:this.toInputTag,
+      toInputTagType:this.toInputTagType,
       toOutputTag:this.toOutputTag,
-      importTypes: importTypes
+      toConverterTag:this.toConverterTag
     }
     fs.mkdirsSync(this.javaResourceDir)
     fs.mkdirsSync(this.javaModelDir)
@@ -92,9 +105,13 @@ class Scaffold{
       targetName:targetName,
       targetName2:this.toJavaName(targetName),
       columns:cols,
+      importTypes:this.importTypes,
+      inputTypes:this.inputTypes,
+      inputConveters:this.inputConveters,
       toInputTag:this.toInputTag,
+      toInputTagType:this.toInputTagType,
       toOutputTag:this.toOutputTag,
-      importTypes: importTypes
+      toConverterTag:this.toConverterTag
     }
     fs.mkdirsSync(this.javaViewDir)
     fs.mkdirsSync(this.javaModelDir)
@@ -149,14 +166,7 @@ class Scaffold{
      case 'Boolean':
        return 'selectBooleanCheckbox'
      default:
-       var type = 'text'
-       for(var t in inputTypes){
-          if(inputTypes[t].indexOf(c.javaType) > -1) {
-            type = t;
-            break;
-          }
-       }
-       return `inputText p:type="${type}"`
+       return 'inputText'
     }
   }
 
@@ -167,6 +177,21 @@ class Scaffold{
      default:
        return 'outputText'
     }
+  }
+
+  toInputTagType(c) {
+    var type = ''
+    for(var t in this.inputTypes){
+       if(this.inputTypes[t].indexOf(c.javaType) > -1) {
+         type = t;
+         break;
+       }
+    }
+    return type == '' ? '' : ` p:type="${type}"`
+  }
+
+  toConverterTag(c) {
+    return this.inputConveters[c.javaType] ? this.inputConveters[c.javaType] : ''
   }
 
   toIncludeTag(c) {

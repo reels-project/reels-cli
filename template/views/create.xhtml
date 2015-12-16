@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:r="https://github.com/reels-project/reels/faces"
 	template="../layout/_layout.xhtml">
 	<ui:param name="pageTitle" value="<%-targetName%>" />
 
@@ -15,7 +16,9 @@
 		<h:form>
 			<% columns.filter(function(e){return e.name != 'id'}).forEach(function(c){ %>
 			<label for="model_<%-c.name%>" ><%-c.name%></label>
-			<h:<%-toInputTag(c)%> id="model_<%-c.name%>" value="#{<%-targetName%>CreateView.model.<%-c.name%>}" />
+			<h:<%-toInputTag(c)%><%-toInputTagType(c)%> id="model_<%-c.name%>" value="#{<%-targetName%>CreateView.model.<%-c.name%>}" >
+			  <r:<%-toConverterTag(c)%> />
+			</h:<%-toInputTag(c)%>>
 			<% }) %>
 			<h:commandButton value="Create" action="#{<%-targetName%>CreateView.create()}" />
 		</h:form>
