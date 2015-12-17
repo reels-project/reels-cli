@@ -61,28 +61,7 @@ class Scaffold{
   }
 
   generateRest(targetName,columns){
-    targetName = this.toVarName(targetName)
-    columns = columns || []
-    console.log(`columns = ${columns}`)
-    const cols = columns.map((c)=>this.toColumnObj(c))
-    if(!cols.some((e)=>e.name === 'id')){
-      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
-    }
-    console.log(`cols = ${cols}`)
-
-    const args = {
-      packageName:this.packageName,
-      targetName:targetName,
-      targetName2:this.toJavaName(targetName),
-      columns:cols,
-      importTypes:this.importTypes,
-      inputTypes:this.inputTypes,
-      inputConveters:this.inputConveters,
-      toInputTag:this.toInputTag,
-      toInputTagType:this.toInputTagType,
-      toOutputTag:this.toOutputTag,
-      toConverterTag:this.toConverterTag
-    }
+    const args = this.toArgs(targetName,columns)
     fs.mkdirsSync(this.javaResourceDir)
     fs.mkdirsSync(this.javaModelDir)
 
@@ -91,28 +70,7 @@ class Scaffold{
   }
 
   generate(targetName,columns){
-    targetName = this.toVarName(targetName)
-    columns = columns || []
-    console.log(`columns = ${columns}`)
-    const cols = columns.map((c)=>this.toColumnObj(c))
-    if(!cols.some((e)=>e.name === 'id')){
-      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
-    }
-    console.log(`cols = ${cols}`)
-
-    const args = {
-      packageName:this.packageName,
-      targetName:targetName,
-      targetName2:this.toJavaName(targetName),
-      columns:cols,
-      importTypes:this.importTypes,
-      inputTypes:this.inputTypes,
-      inputConveters:this.inputConveters,
-      toInputTag:this.toInputTag,
-      toInputTagType:this.toInputTagType,
-      toOutputTag:this.toOutputTag,
-      toConverterTag:this.toConverterTag
-    }
+    const args = this.toArgs(targetName,columns)
     fs.mkdirsSync(this.javaViewDir)
     fs.mkdirsSync(this.javaModelDir)
     const viewOutDir = `${this.viewDir}/${targetName}`
@@ -127,6 +85,30 @@ class Scaffold{
     })
 
     this.renderTemplate(`${this.javaTemplate}/Model.java`,`${this.javaModelDir}/${args.targetName2}Model.java`,args)
+  }
+
+  toArgs(targetName, columns){
+    targetName = this.toVarName(targetName)
+    columns = columns || []
+    console.log(`columns = ${columns}`)
+    const cols = columns.map((c)=>this.toColumnObj(c))
+    if(!cols.some((e)=>e.name === 'id')){
+      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
+    }
+    console.log(`cols = ${cols}`)
+    return {
+      packageName:this.packageName,
+      targetName:targetName,
+      targetName2:this.toJavaName(targetName),
+      columns:cols,
+      importTypes:this.importTypes,
+      inputTypes:this.inputTypes,
+      inputConveters:this.inputConveters,
+      toInputTag:this.toInputTag,
+      toInputTagType:this.toInputTagType,
+      toOutputTag:this.toOutputTag,
+      toConverterTag:this.toConverterTag
+    }
   }
 
   renderTemplate(from,to,args){
@@ -192,10 +174,6 @@ class Scaffold{
 
   toConverterTag(c) {
     return this.inputConveters[c.javaType] ? this.inputConveters[c.javaType] : ''
-  }
-
-  toIncludeTag(c) {
-
   }
 }
 
