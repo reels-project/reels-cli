@@ -1,4 +1,6 @@
 package <%- packageName %>.model;
+<% columns.forEach(function(c){ if(importTypes[c.javaType]){%>
+import <%-importTypes[c.javaType]%>;<%}}) %>
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

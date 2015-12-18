@@ -35,24 +35,33 @@ class Scaffold{
       {java:'EditView.java',xhtml:'edit.xhtml'},
       {java:'ShowView.java',xhtml:'show.xhtml'}
     ]
+    this.inputTypes = {
+      'number': ['Double','Long','Integer'],
+      'time': ['LocalTime'],
+      'datetime-local': ['LocalDateTime'],
+      'date': ['LocalDate','Date']
+    }
+    this.importTypes = {
+      'LocalDate': 'java.time.LocalDate',
+      'LocalDateTime': 'java.time.LocalDateTime',
+      'LocalTime': 'java.time.LocalTime',
+      'Date': 'java.util.Date'
+    }
+    this.inputConveters = {
+      'String': 'convertOptionalString',
+      'Boolean': 'convertBoolean',
+      'Double': 'convertDouble',
+      'Long': 'convertLong',
+      'Integer': 'convertInteger',
+      'LocalTime': 'convertTime',
+      'LocalDateTime': 'convertDateTime',
+      'LocalDate': 'convertDate',
+      'Date': 'convertDate',
+    }
   }
 
   generateRest(targetName,columns){
-    targetName = this.toVarName(targetName)
-    columns = columns || []
-    console.log(`columns = ${columns}`)
-    const cols = columns.map((c)=>this.toColumnObj(c))
-    if(!cols.some((e)=>e.name === 'id')){
-      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
-    }
-    console.log(`cols = ${cols}`)
-
-    const args = {
-      packageName:this.packageName,
-      targetName:targetName,
-      targetName2:this.toJavaName(targetName),
-      columns:cols
-    }
+    const args = this.toArgs(targetName,columns)
     fs.mkdirsSync(this.javaResourceDir)
     fs.mkdirsSync(this.javaModelDir)
 
@@ -61,21 +70,7 @@ class Scaffold{
   }
 
   generate(targetName,columns){
-    targetName = this.toVarName(targetName)
-    columns = columns || []
-    console.log(`columns = ${columns}`)
-    const cols = columns.map((c)=>this.toColumnObj(c))
-    if(!cols.some((e)=>e.name === 'id')){
-      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
-    }
-    console.log(`cols = ${cols}`)
-
-    const args = {
-      packageName:this.packageName,
-      targetName:targetName,
-      targetName2:this.toJavaName(targetName),
-      columns:cols
-    }
+    const args = this.toArgs(targetName,columns)
     fs.mkdirsSync(this.javaViewDir)
     fs.mkdirsSync(this.javaModelDir)
     const viewOutDir = `${this.viewDir}/${targetName}`
@@ -90,6 +85,30 @@ class Scaffold{
     })
 
     this.renderTemplate(`${this.javaTemplate}/Model.java`,`${this.javaModelDir}/${args.targetName2}Model.java`,args)
+  }
+
+  toArgs(targetName, columns){
+    targetName = this.toVarName(targetName)
+    columns = columns || []
+    console.log(`columns = ${columns}`)
+    const cols = columns.map((c)=>this.toColumnObj(c))
+    if(!cols.some((e)=>e.name === 'id')){
+      cols.unshift({name:'id',javaName:this.toJavaName('id'),javaType:'Long'})
+    }
+    console.log(`cols = ${cols}`)
+    return {
+      packageName:this.packageName,
+      targetName:targetName,
+      targetName2:this.toJavaName(targetName),
+      columns:cols,
+      importTypes:this.importTypes,
+      inputTypes:this.inputTypes,
+      inputConveters:this.inputConveters,
+      toInputTag:this.toInputTag,
+      toInputTagType:this.toInputTagType,
+      toOutputTag:this.toOutputTag,
+      toConverterTag:this.toConverterTag
+    }
   }
 
   renderTemplate(from,to,args){
@@ -122,6 +141,39 @@ class Scaffold{
       javaName : this.toJavaName(name),
       javaType : type || 'String'
     }
+  }
+
+  toInputTag(c) {
+    switch (c.javaType) {
+     case 'Boolean':
+       return 'selectBooleanCheckbox'
+     default:
+       return 'inputText'
+    }
+  }
+
+  toOutputTag(c) {
+    switch (c.javaType) {
+     case 'Boolean':
+       return 'selectBooleanCheckbox'; break;
+     default:
+       return 'outputText'
+    }
+  }
+
+  toInputTagType(c) {
+    var type = ''
+    for(var t in this.inputTypes){
+       if(this.inputTypes[t].indexOf(c.javaType) > -1) {
+         type = t;
+         break;
+       }
+    }
+    return type == '' ? '' : ` p:type="${type}"`
+  }
+
+  toConverterTag(c) {
+    return this.inputConveters[c.javaType] ? this.inputConveters[c.javaType] : ''
   }
 }
 
